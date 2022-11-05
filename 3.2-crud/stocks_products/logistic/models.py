@@ -6,6 +6,9 @@ class Product(models.Model):
     title = models.CharField(max_length=60, unique=True)
     description = models.TextField(null=True, blank=True)
 
+    def __str__(self):
+        return self.title
+
 
 class Stock(models.Model):
     address = models.CharField(max_length=200, unique=True)
@@ -13,7 +16,15 @@ class Stock(models.Model):
         Product,
         through='StockProduct',
         related_name='stocks',
+        verbose_name = 'Склад',
     )
+
+    class Mets:
+        verbose_name = 'Склад'
+        verbose_name_plural = 'Склвды'
+
+    # def __str__(self):
+    #     return self.address
 
 
 class StockProduct(models.Model):
