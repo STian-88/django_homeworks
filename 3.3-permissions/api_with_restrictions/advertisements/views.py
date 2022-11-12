@@ -1,4 +1,6 @@
 from django.conf import settings
+from rest_framework.response import Response
+from django.contrib.auth.models import AnonymousUser
 
 from rest_framework.viewsets import ModelViewSet
 from advertisements.models import Advertisement
@@ -31,4 +33,17 @@ class AdvertisementViewSet(ModelViewSet):
         if self.action in ['update', 'partial_update', 'destroy', ]:
             return [IsOwnerOrOnlyRead()]
         return []
+
+    def list(self, request):
+        if type(request.user) is AnonymousUser:
+            queryset = Advertisement.objects.filter(status='OPEN')
+            serializer = AdvertisementSerializer(queryset, many=True)
+            return Response(serializer.data)
+        queryset = []
+        for item in Advertisement.objects.all():
+            if item.creator != request.user and item.status == 'DRAFT':
+                continue
+            queryset.append(item)
+        serializer = AdvertisementSerializer(queryset, many=True)
+        return Response(serializer.data)
 

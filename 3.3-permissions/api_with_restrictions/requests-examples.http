@@ -5,14 +5,17 @@
 # получение объявлений
 GET {{baseUrl}}/advertisements/
 Content-Type: application/json
-#Authorization: Token 469847760c90c13f9652c8ee90a029ce42a94254
+#admin2
+Authorization: Token 422c9db45e34005e2140a445e06ed4121defee50
+#admin1
+#Authorization: Token ad5d06c7fe213a521401e87566daef2ec92a0e14
 
 ###
 
 # создание объявления admin1
 POST {{baseUrl}}/advertisements/
 Content-Type: application/json
-Authorization: Token 32a600135cd08f281159c1278be963ba77577292
+Authorization: Token ad5d06c7fe213a521401e87566daef2ec92a0e14
 
 {
   "title": "Автомобиль",
@@ -24,7 +27,7 @@ Authorization: Token 32a600135cd08f281159c1278be963ba77577292
 # создание объявления admin2
 POST {{baseUrl}}/advertisements/
 Content-Type: application/json
-Authorization: Token 469847760c90c13f9652c8ee90a029ce42a94254
+Authorization: Token 422c9db45e34005e2140a445e06ed4121defee50
 
 {
   "title": "Велосипед",
@@ -34,9 +37,9 @@ Authorization: Token 469847760c90c13f9652c8ee90a029ce42a94254
 ###
 
 # попытка поменять объявление admin1
-PATCH {{baseUrl}}/advertisements/119/
+PATCH {{baseUrl}}/advertisements/149/
 Content-Type: application/json
-Authorization: Token 32a600135cd08f281159c1278be963ba77577292
+Authorization: Token ad5d06c7fe213a521401e87566daef2ec92a0e14
 
 { 
   "status": "OPEN"
@@ -45,9 +48,9 @@ Authorization: Token 32a600135cd08f281159c1278be963ba77577292
 ###
 
 # попытка поменять объявление admin2
-PATCH {{baseUrl}}/advertisements/119/
+PATCH {{baseUrl}}/advertisements/149/
 Content-Type: application/json
-Authorization: Token 469847760c90c13f9652c8ee90a029ce42a94254
+Authorization: Token 422c9db45e34005e2140a445e06ed4121defee50
 
 { 
   "status": "CLOSED"
@@ -56,16 +59,16 @@ Authorization: Token 469847760c90c13f9652c8ee90a029ce42a94254
 ###
 
 # Удаление обьявления admin1
-DELETE {{baseUrl}}/advertisements/131/
+DELETE {{baseUrl}}/advertisements/128/
 Content-Type: application/json
-Authorization: Token 32a600135cd08f281159c1278be963ba77577292 
+Authorization: Token ad5d06c7fe213a521401e87566daef2ec92a0e14 
 
 ###
 
 # Удаление обьявления admin2
-DELETE {{baseUrl}}/advertisements/126/
+DELETE {{baseUrl}}/advertisements/118/
 Content-Type: application/json
-Authorization: Token 469847760c90c13f9652c8ee90a029ce42a94254 
+Authorization: Token 422c9db45e34005e2140a445e06ed4121defee50 
 
 ###
 
@@ -76,5 +79,5 @@ Content-Type: application/json
 ###
 
 # фильтрация по дате
-GET {{baseUrl}}/advertisements/?created_at_before=2022-11-11&status=OPEN
+GET {{baseUrl}}/advertisements/?created_at_before=2022-11-12&status=OPEN
 Content-Type: application/json
