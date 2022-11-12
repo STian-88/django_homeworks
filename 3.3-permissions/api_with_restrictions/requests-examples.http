@@ -1,42 +1,80 @@
 # примеры API-запросов
 
-@baseUrl = https://localhost:8000/api
+@baseUrl = http://localhost:8000/api
 
 # получение объявлений
 GET {{baseUrl}}/advertisements/
 Content-Type: application/json
+#Authorization: Token 469847760c90c13f9652c8ee90a029ce42a94254
 
 ###
 
-# создание объявления
+# создание объявления admin1
 POST {{baseUrl}}/advertisements/
 Content-Type: application/json
-Authorization: Token 902ef055a9ac93f18327f1f9c45ab059f1a62c7d
+Authorization: Token 32a600135cd08f281159c1278be963ba77577292
 
 {
-  "title": "Шкаф IKEA",
+  "title": "Автомобиль",
   "description": "Срочно"
 }
 
 ###
 
-# попытка поменять объявление
-PATCH {{baseUrl}}/advertisements/1/
+# создание объявления admin2
+POST {{baseUrl}}/advertisements/
 Content-Type: application/json
-Authorization: Token 902ef055a9ac93f18327f1f9c45ab059f1a62c7d
+Authorization: Token 469847760c90c13f9652c8ee90a029ce42a94254
 
 {
+  "title": "Велосипед",
+  "description": "Дорого"
+}
+
+###
+
+# попытка поменять объявление admin1
+PATCH {{baseUrl}}/advertisements/119/
+Content-Type: application/json
+Authorization: Token 32a600135cd08f281159c1278be963ba77577292
+
+{ 
+  "status": "OPEN"
+}
+
+###
+
+# попытка поменять объявление admin2
+PATCH {{baseUrl}}/advertisements/119/
+Content-Type: application/json
+Authorization: Token 469847760c90c13f9652c8ee90a029ce42a94254
+
+{ 
   "status": "CLOSED"
 }
 
 ###
 
+# Удаление обьявления admin1
+DELETE {{baseUrl}}/advertisements/131/
+Content-Type: application/json
+Authorization: Token 32a600135cd08f281159c1278be963ba77577292 
+
+###
+
+# Удаление обьявления admin2
+DELETE {{baseUrl}}/advertisements/126/
+Content-Type: application/json
+Authorization: Token 469847760c90c13f9652c8ee90a029ce42a94254 
+
+###
+
 # фильтрация по создателю
-GET {{baseUrl}}/advertisements/?creator=3
+GET {{baseUrl}}/advertisements/?creator=1
 Content-Type: application/json
 
 ###
 
 # фильтрация по дате
-GET {{baseUrl}}/advertisements/?created_at_before=2020-10-01
+GET {{baseUrl}}/advertisements/?created_at_before=2022-11-11&status=OPEN
 Content-Type: application/json
