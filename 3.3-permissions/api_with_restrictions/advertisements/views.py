@@ -26,7 +26,7 @@ class AdvertisementViewSet(ModelViewSet):
     filterset_class = AdvertisementFilter
 
     def get_permissions(self):
-        if self.request.user.id in settings.ADMIN_IDS:
+        if self.request.user.is_staff:
             return []
         if self.action in ['create', ]:
             return [IsAuthenticated()]
@@ -39,11 +39,7 @@ class AdvertisementViewSet(ModelViewSet):
             queryset = Advertisement.objects.filter(status='OPEN')
             serializer = AdvertisementSerializer(queryset, many=True)
             return Response(serializer.data)
-        queryset = []
-        for item in Advertisement.objects.all():
-            if item.creator != request.user and item.status == 'DRAFT':
-                continue
-            queryset.append(item)
+        queryset = Advertisment.objects.exclude(creator!=request.user, status='DRAFT')
         serializer = AdvertisementSerializer(queryset, many=True)
         return Response(serializer.data)
 

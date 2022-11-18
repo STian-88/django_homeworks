@@ -11,7 +11,6 @@ class UserSerializer(serializers.ModelSerializer):
         fields = ['id', 'username', 'first_name',
                   'last_name',]
 
-
 class AdvertisementSerializer(serializers.ModelSerializer):
     creator = UserSerializer(
             read_only=True
@@ -27,8 +26,9 @@ class AdvertisementSerializer(serializers.ModelSerializer):
         return super().create(validated_data)
 
     def validate(self, data):
-        if len(Advertisement.objects.filter(creator__username=self.context['request'].user,
-            status='OPEN')) > 9 and self.context['request'].method == 'POST':
+        print(self.context['request'].data.get('status'))
+        if Advertisement.objects.filter(creator=self.context['request'].user,
+                status='OPEN').count() > 9 and self.context['request'].data.get('status') == 'OPEN':
             raise serializers.ValidationError('Превышено количество открытых обьявлений')
         return data
 
