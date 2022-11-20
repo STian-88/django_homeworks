@@ -78,7 +78,15 @@ def test_create_course(client, path):
 def test_update_course(client, course_factory, path):
     courses = course_factory(_quantity=10)
     random_course_id = random.choice(Course.objects.values_list('id'))[0]
-    data = {'id': random_course_id, 'name': 'Course'}
+    Course.objects.filter(id=random_course_id).update(name='Update_course_name')
+    assert Course.objects.get(id=random_course_id).name == 'Update_course_name'
 
+@pytest.mark.django_db
+def test_delete_course(client, course_factory, path):
+    courses = course_factory(_quantity=10)
+    count = Course.objects.count()
+    random_course_id = random.choice(Course.objects.values_list('id'))[0]
+    Course.objects.get(id=random_course_id).delete()
+    assert Course.objects.count() == count-1
 
 
