@@ -34,11 +34,9 @@ def course_factory():
 def test_get_course(client, course_factory, random_num, path):
     courses = course_factory(_quantity=10)
     random_course_id = random.choice(Course.objects.values_list('id'))[0]
-    response = client.get(path, {'id': random_course_id})
-    assert response.status_code == 200
-    data = response.json()[0]
-    course_name = [item.name for item in courses if item.id == random_course_id][0]
-    assert data['name'] == course_name
+    path += '{}/'.format(random_course_id)
+    data = client.get(path).json()
+    assert data['name'] == [course.name for course in courses if course.id == random_course_id][0]
 
 @pytest.mark.django_db
 def test_get_courses(client, course_factory, random_num, path):
@@ -52,7 +50,7 @@ def test_get_courses(client, course_factory, random_num, path):
 def test_course_filter_name(client, course_factory, random_num, path):
     courses = course_factory(_quantity=10)
     random_course_name = courses[random_num].name
-    path = path + '?name=' + random_course_name
+    path += '?name=' + random_course_name
     response = client.get(path)
     assert response.status_code == 200
     assert response.json()[0]['name'] == random_course_name
@@ -61,7 +59,7 @@ def test_course_filter_name(client, course_factory, random_num, path):
 def test_course_filter_id(client, course_factory, random_num, path):
     courses = course_factory(_quantity=10)
     random_course_id = random.choice(Course.objects.values_list('id'))[0]
-    path = path + '?id=' + str(random_course_id)
+    path += '?id=' + str(random_course_id)
     response = client.get(path)
     assert response.status_code == 200
     assert response.json()[0]['id'] == random_course_id
@@ -78,15 +76,18 @@ def test_create_course(client, path):
 def test_update_course(client, course_factory, path):
     courses = course_factory(_quantity=10)
     random_course_id = random.choice(Course.objects.values_list('id'))[0]
-    Course.objects.filter(id=random_course_id).update(name='Update_course_name')
-    assert Course.objects.get(id=random_course_id).name == 'Update_course_name'
+    name = [course.name for course in courses if course.id == random_course_id]
+    path += f'{random_course_id}/'
+    data = client.patch(path, {'name': 'Update_name'}).json()
+    assert data['name'] != name
+    assert data['name'] == 'Update_name'
 
 @pytest.mark.django_db
 def test_delete_course(client, course_factory, path):
     courses = course_factory(_quantity=10)
     count = Course.objects.count()
     random_course_id = random.choice(Course.objects.values_list('id'))[0]
-    Course.objects.get(id=random_course_id).delete()
+    path += '{id}/'.format(id=random_course_id)
+    response = client.delete(path)
+    assert response.status_code == 204
     assert Course.objects.count() == count-1
-
-
